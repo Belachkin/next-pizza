@@ -5,6 +5,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export default defineConfig({
+  migrations: {
+    seed: 'ts-node --compiler-options {"module":"CommonJS"} prisma/seed.ts',
+  },
   datasource: {
     // Теперь process.env.DATABASE_URL точно не будет undefined
     url: process.env.DATABASE_URL,

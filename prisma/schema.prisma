@@ -45,7 +45,7 @@ model Product {
 
     name String
     imageUrl String
-    description String
+    description String?
 
     category Category @relation(fields: [categoryId], references: [id])
     categoryId Int
@@ -63,7 +63,7 @@ model ProductItem {
   id Int @id @default(autoincrement())
 
   price Int
-  size Int
+  size Int?
 
   cartItems CartItem[]
 
