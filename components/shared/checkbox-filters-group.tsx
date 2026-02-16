@@ -11,13 +11,15 @@ type Item = FilterChecboxProps;
 interface Props {
   title: string;
   items: Item[];
-  defaultItems: Item[];
+  defaultItems?: Item[];
   limit?: number;
   searchInputPlaceholder?: string;
-  onChange?: (values: string[]) => void;
+  onClickCheckbox?: (id: string) => void;
   defaultValue?: string[];
   className?: string;
   loading?: boolean;
+  selected?: Set<string>;
+  name?: string;
 }
 
 export const CheckboxFiltersGroup: React.FC<Props> = ({
@@ -27,9 +29,11 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
   limit = 5,
   searchInputPlaceholder = "Поиск...",
   className,
-  onChange,
+  onClickCheckbox,
   defaultValue,
   loading,
+  selected,
+  name,
 }) => {
   const [showAll, setShowAll] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
@@ -38,7 +42,7 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
     ? items.filter((item) =>
         item.text.toLowerCase().includes(searchValue.toLowerCase()),
       )
-    : defaultItems.slice(0, limit);
+    : (defaultItems || items).slice(0, limit);
 
   const onChangeSearchInput = (value: string) => {
     setSearchValue(value);
@@ -52,6 +56,8 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
         {Array.from({ length: limit }).map((_, i) => (
           <Skeleton key={i} className="h-6 mb-3" />
         ))}
+
+        <Skeleton className="w-28 h-6 mb-3" />
       </div>
     );
   } else {
@@ -72,12 +78,13 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
         <div className="flex flex-col gap-4 max-h-96 pr-2 overflow-auto scrollbar">
           {list.map((item, index) => (
             <FilterCheckbox
-              onCheckedChange={(ids) => console.log(ids)}
-              checked={false}
+              onCheckedChange={() => onClickCheckbox?.(item.value)}
+              checked={selected?.has(item.value) || false}
               key={String(item.value)}
               value={item.value}
               text={item.text}
               endAdornment={item.endAdornment}
+              name={name}
             />
           ))}
         </div>
