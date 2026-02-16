@@ -15,14 +15,14 @@ interface ReturnProps {
   onAddId?: (id: string) => void;
 }
 
-export const useFilterIngredients = (): ReturnProps => {
+export const useFilterIngredients = (values: string[] = []): ReturnProps => {
   const [ingredients, setIngredients] = React.useState<ReturnProps["items"]>(
     [],
   );
 
   const [loading, setLoading] = React.useState(true);
 
-  const [selectedIds, { toggle }] = useSet(new Set<string>([]));
+  const [selectedIds, { toggle }] = useSet(new Set<string>(values));
   React.useEffect(() => {
     async function fetchIngredients() {
       try {
@@ -43,6 +43,16 @@ export const useFilterIngredients = (): ReturnProps => {
 
     fetchIngredients();
   }, []);
+
+  const setSelectedIngedients = (ids: string[]) => {
+    ids.forEach((id) => {
+      if (selectedIds.has(id)) {
+        selectedIds.delete(id);
+      } else {
+        selectedIds.add(id);
+      }
+    });
+  };
 
   return {
     items: ingredients,
