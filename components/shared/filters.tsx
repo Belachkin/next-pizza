@@ -4,19 +4,14 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { Title, FilterCheckbox, CheckboxFiltersGroup } from "./";
 import { Input, RangeSlider } from "../ui";
+import { useFilterIngredients } from "@/hooks/useFilterIngredients";
 
 interface Props {
   className?: string;
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
-  const ingredients = [
-    "Сырный соус",
-    "Моцарелла",
-    "Чеснок",
-    "Соленые огурчики",
-    "Красный лук",
-  ];
+  const { items } = useFilterIngredients();
 
   return (
     <div className={cn("", className)}>
@@ -52,28 +47,15 @@ export const Filters: React.FC<Props> = ({ className }) => {
         title="Ингредиенты:"
         className="mt-5"
         limit={6}
-        defaultItems={[
-          { text: "Сырный соус", value: "1" },
-          { text: "Моцарелла", value: "2" },
-          { text: "Чеснок", value: "3" },
-          { text: "Соленые огурчики", value: "4" },
-          { text: "Красный лук", value: "5" },
-          { text: "Томаты", value: "6" },
-        ]}
-        items={[
-          { text: "Сырный соус", value: "1" },
-          { text: "Моцарелла", value: "2" },
-          { text: "Чеснок", value: "3" },
-          { text: "Соленые огурчики", value: "4" },
-          { text: "Красный лук", value: "5" },
-          { text: "Томаты", value: "6" },
-          { text: "Сырный соус", value: "7" },
-          { text: "Моцарелла", value: "8" },
-          { text: "Чеснок", value: "9" },
-          { text: "Соленые огурчики", value: "10" },
-          { text: "Красный лук", value: "11" },
-          { text: "Томаты", value: "12" },
-        ]}
+        defaultItems={items.slice(0, 6).map((item) => ({
+          text: item.text,
+          value: item.value.toString(),
+        }))}
+        items={items.map((item) => ({
+          text: item.text,
+          value: item.value.toString(),
+        }))}
+        loading={true}
       />
 
       <p className="font-bold mt-6 mb-3">Тип теста</p>
